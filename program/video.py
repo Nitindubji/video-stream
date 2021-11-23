@@ -137,8 +137,12 @@ async def vplay(c: Client, m: Message):
             try:
                 if replied.video:
                     songname = replied.video.file_name[:70]
+                    lol = media.video.thumbs[0]
+                    lel = await client.download_media(lol['file_id'])
+                    thumb = lel
                 elif replied.document:
                     songname = replied.document.file_name[:70]
+                    thumb = IMG_1
             except BaseException:
                 songname = "Video"
 
@@ -147,7 +151,7 @@ async def vplay(c: Client, m: Message):
                 await loser.delete()
                 requester = f"[{m.from_user.first_name}](tg://user?id={m.from_user.id})"
                 await m.reply_photo(
-                    photo=f"{IMG_1}",
+                    photo=thumb,
                     caption=f"💡 **Added in Queue »`{pos}` **\n🏷 **Title:** [{songname}]\n🎧 **By:** {requester}",
                     )
             else:
@@ -170,7 +174,7 @@ async def vplay(c: Client, m: Message):
                 await loser.delete()
                 requester = f"[{m.from_user.first_name}](tg://user?id={m.from_user.id})"
                 await m.reply_photo(
-                    photo=f"{IMG_2}",
+                    photo=thumb,
                     caption=f"💡 **Video Streaming Started!**\n🏷 **Title:** [{songname}]({link})\n🎧 **By:** {requester}",
                     )
         else:
