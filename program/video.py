@@ -174,7 +174,7 @@ async def vplay(c: Client, m: Message):
                 await loser.delete()
                 requester = f"[{m.from_user.first_name}](tg://user?id={m.from_user.id})"
                 await m.reply_photo(
-                    photo=thumb,
+                    photo={thumb},
                     caption=f"💡 **Video Streaming Started!**\n🏷 **Title:** [{songname}]({link})\n🎧 **By:** {requester}",
                     )
         else:
