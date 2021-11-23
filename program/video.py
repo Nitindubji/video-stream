@@ -139,7 +139,8 @@ async def vplay(c: Client, m: Message):
                 if replied.video:
                     songname = replied.video.file_name[:70]
                     lol = replied.video.thumbs[0]
-                    thumb = lol
+                    lel = await client.download_media(lol['file_id'])
+                    thumb = lel
                 elif replied.document:
                     songname = replied.document.file_name[:70]
                     thumb = IMG_1
