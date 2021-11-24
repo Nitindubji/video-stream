@@ -371,7 +371,7 @@ async def vstream(c: Client, m: Message):
         match = re.match(regex, link)
         if match:
             veez, livelink = await ytdl(link)
-            search = VideosSearch(query, limit=1)
+            search = VideosSearch(link, limit=1)
             roo = search.result()["result"] 
             orr = roo[0] 
             thumbid = orr["thumbnails"][0]["url"] 
