@@ -194,6 +194,12 @@ async def vplay(c: Client, m: Message):
                 else:
                     songname = search[0]
                     url = search[1]
+                    search = VideosSearch(query, limit=1)
+                    roo = search.result()["result"] 
+                    orr = roo[0] 
+                    thumbid = orr["thumbnails"][0]["url"] 
+                    split = thumbid.split("?") 
+                    thumb = split[0].strip()
                     veez, ytlink = await ytdl(url)
                     if veez == 0:
                         await loser.edit(f"❌ yt-dl issues detected\n\n» `{ytlink}`")
@@ -205,7 +211,7 @@ async def vplay(c: Client, m: Message):
                             await loser.delete()
                             requester = f"[{m.from_user.first_name}](tg://user?id={m.from_user.id})"
                             await m.reply_photo(
-                                photo=f"{IMG_1}",
+                                photo=thumb,
                                 caption=f"💡 **Added In Queue »**`{pos}`\n🏷 **Title:** [{songname}]({url})\n🎧 By:** {requester}",
                                 )
                         else:
@@ -223,8 +229,8 @@ async def vplay(c: Client, m: Message):
                                 await loser.delete()
                                 requester = f"[{m.from_user.first_name}](tg://user?id={m.from_user.id})"
                                 await m.reply_photo(
-                                    photo=f"{IMG_2}",
-                                    caption=f"💡 **Video Streamig Started!**\n🏷 **Title:** [{songname}]({url})\n🎧 **By:** {requester}",
+                                    photo=thumb,
+                                    caption=f"💡 **Playing:** [{songname}]({url})\n🎧 **By:** {requester}",
                                     )
                             except Exception as ep:
                                 await loser.delete()
@@ -246,6 +252,12 @@ async def vplay(c: Client, m: Message):
             else:
                 songname = search[0]
                 url = search[1]
+                search = VideosSearch(query, limit=1)
+                roo = search.result()["result"] 
+                orr = roo[0] 
+                thumbid = orr["thumbnails"][0]["url"] 
+                split = thumbid.split("?") 
+                thumb = split[0].strip()
                 veez, ytlink = await ytdl(url)
                 if veez == 0:
                     await loser.edit(f"❌ yt-dl issues detected\n\n» `{ytlink}`")
@@ -275,8 +287,8 @@ async def vplay(c: Client, m: Message):
                             await loser.delete()
                             requester = f"[{m.from_user.first_name}](tg://user?id={m.from_user.id})"
                             await m.reply_photo(
-                                photo=f"{IMG_2}",
-                                caption=f"💡 **Video Streaming Started!**\n\n🏷 **Title:** [{songname}]({url})\n🎧 **By:** {requester}",
+                                photo=thumb,
+                                caption=f"🏷 **Playing:** [{songname}]({url})\n🎧 **By:** {requester}",
                             )
                         except Exception as ep:
                             await loser.delete()
