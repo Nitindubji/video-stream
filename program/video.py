@@ -354,6 +354,7 @@ async def vstream(c: Client, m: Message):
         elif len(m.command) == 3:
             op = m.text.split(None, 1)[1]
             link = op.split(None, 1)[0]
+            thumb = IMG_1
             quality = op.split(None, 1)[1]
             if quality == "720" or "480" or "360":
                 Q = int(quality)
@@ -370,9 +371,16 @@ async def vstream(c: Client, m: Message):
         match = re.match(regex, link)
         if match:
             veez, livelink = await ytdl(link)
+            search = VideosSearch(query, limit=1)
+            roo = search.result()["result"] 
+            orr = roo[0] 
+            thumbid = orr["thumbnails"][0]["url"] 
+            split = thumbid.split("?") 
+            thumb = split[0].strip()
         else:
             livelink = link
             veez = 1
+            thumb = IMG_1
 
         if veez == 0:
             await loser.edit(f"❌ yt-dl issues detected\n\n» `{ytlink}`")
@@ -381,7 +389,7 @@ async def vstream(c: Client, m: Message):
                 pos = add_to_queue(chat_id, "Live %Stream", livelink, link, "Video", Q)
                 await loser.delete()
                 await m.reply_photo(
-                    photo=f"{IMG_1}",
+                    photo=thumb,
                     caption=f"💡 **Added in Queue At** »`{pos}`",
                     )
             else:
@@ -404,7 +412,7 @@ async def vstream(c: Client, m: Message):
                     add_to_queue(chat_id, "Live Stream", livelink, link, "Video", Q)
                     await loser.delete()
                     await m.reply_photo(
-                        photo=f"{IMG_4}",
+                        photo=thumb,
                         caption=f"▶️ **[Live Streaming]({link}) Started in {chat_title} !**",
                         )
                 except Exception as ep:
