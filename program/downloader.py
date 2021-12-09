@@ -98,28 +98,41 @@ def get_text(message: Message) -> [None, str]:
         return None
 
 
-async def progress_bar(current, total, status_msg, start, msg):
-    present = time.time()
-    if round((present - start) % 3) == 0 or current == total:
-        speed = current / (present - start)
+async def progress(current, total, message, start, type_of_ps, file_name=None):
+    now = time.time()
+    diff = now - start
+    if round(diff % 10.00) == 0 or current == total:
         percentage = current * 100 / total
-        time_to_complete = round(((total - current) / speed)) * 1000
-        time_to_complete = TimeFormatter(time_to_complete)
-        progressbar = "[{0}{1}]".format(\
-            ''.join([f"{BLACK_MEDIUM_SMALL_SQUARE}" for i in range(math.floor(percentage / 10))]),
-            ''.join([f"{WHITE_MEDIUM_SMALL_SQUARE}" for i in range(10 - math.floor(percentage / 10))])
-            )
-        current_message = f"""**{status_msg}** {round(percentage, 2)}%
-{progressbar}
-{HOLLOW_RED_CIRCLE} **Speed**: {humanbytes(speed)}/s
-{HOLLOW_RED_CIRCLE} **Done**: {humanbytes(current)}
-{HOLLOW_RED_CIRCLE} **Size**: {humanbytes(total)}
-{HOLLOW_RED_CIRCLE} **Time Left**: {time_to_complete}"""
-        try:
-            await msg.edit(text=current_message)
-        except:
-            pass
+        speed = current / diff
+        elapsed_time = round(diff) * 1000
+        if elapsed_time == 0:
+            return
+        time_to_completion = round((total - current) / speed) * 1000
+        estimated_total_time = elapsed_time + time_to_completion
+        progress_str = "{0}{1} {2}%\n".format(
+            "".join("🔴" for _ in range(math.floor(percentage / 10))),
+            "".join("🔘" for _ in range(10 - math.floor(percentage / 10))),
+            round(percentage, 2),
+        )
 
+        tmp = progress_str + "{0} of {1}\nETA: {2}".format(
+            humanbytes(current), humanbytes(total), time_formatter(estimated_total_time))
+        if file_name:
+            try:
+                await message.edit(
+                    "{}\n**File Name:** `{}`\n{}".format(type_of_ps, file_name, tmp)
+                )
+            except FloodWait as e:
+                await asyncio.sleep(e.x)
+            except MessageNotModified:
+                pass
+        else:
+            try:
+                await message.edit("{}\n{}".format(type_of_ps, tmp))
+            except FloodWait as e:
+                await asyncio.sleep(e.x)
+            except MessageNotModified:
+                pass
 
 def get_user(message: Message, text: str) -> [int, str, None]:
     asplit = None if text is None else text.split(" ", 1)
