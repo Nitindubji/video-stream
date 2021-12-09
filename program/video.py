@@ -5,7 +5,7 @@
 import asyncio
 import re
 import time
-from program.downloader import progress_bar
+from ..downloader import progress
 from config import ASSISTANT_NAME, BOT_USERNAME, IMG_4, IMG_5
 from driver.decorators import sudo_users_only
 from driver.filters import command, other_filters
@@ -122,9 +122,9 @@ async def vplay(c: Client, m: Message):
     start_time = time.time()
     if replied:
         if replied.video or replied.document:
-            loser = await replied.reply("Downladig")
+            loser = await m.reply_text("Downladig")
             
-            dl = await replied.download(progress=progress_bar, progress_args=("downloading..", replied, loser, start_time))
+            dl = await m.download(progress=progress, progress_args=("downloading:", start_time, loser))
             
             link = replied.link
             if len(m.command) < 2:
